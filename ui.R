@@ -19,14 +19,13 @@ shinyUI(
     tags$head(tags$style(".shiny-notification {position: fixed; top: 30% ;left: 35%")),
     tags$head(tags$style("#navbar {height:75px;}")),
     navbarPage(
-
       title = tags$img(
         height = 50,
         src = 'sciv_logo_transparent.png'#src = "https://www.scitovation.com/wp-content/themes/scitovation/assets/images/logo/ScitoVation-Pioneers_in_Chemical_Safety_Assessment.svg"
       ),
       id = 'navbar',
       #position = 'fixed-top',
-      windowTitle = 'ScitoVation TTC Data Mart',
+      windowTitle = 'TTC Data Mart',
       fluid = T,
       collapsible = T,
       # selected = 'About',
@@ -34,6 +33,7 @@ shinyUI(
         title = 'Datatable',
         icon = icon('table'),
         fluidPage(
+          #fluidRow(actionButton("help","Help",icon = icon("question-circle"))),
           fluidRow(
             column(
               3,
