@@ -26,7 +26,7 @@ shinyUI(
       ),
       id = 'navbar',
       #position = 'fixed-top',
-      windowTitle = 'TTC',
+      windowTitle = 'ScitoVation TTC Data Mart',
       fluid = T,
       collapsible = T,
       # selected = 'About',
@@ -34,7 +34,6 @@ shinyUI(
         title = 'Datatable',
         icon = icon('table'),
         fluidPage(
-          #fluidRow(actionButton("help","Help",icon = icon("question-circle"))),
           fluidRow(
             column(
               3,
@@ -57,15 +56,15 @@ shinyUI(
               #data.hint = "Cramer Rules original and Cramer Rules with Extensions methods were used to assign three classes - Low - Class I, Intermediate - Class II, and High - Class III. The fourth group was Anti-cholinesterase. Here, the structural alerts for functional group identification method was employed to identify compounds that were carbamate esters or organophosphate esters based on a YES for FG52_2 or FG81_2, respectively, for each chemical in the Toxtree output file. A fifth class, Genotoxic Chemicals, was also determined. Here, a Benigni/Bossa Rulebase for Mutagenicity and Carcinogenicity method was first applied to flag compounds that might be genotoxic based on whether the result for Structural Alert for genotoxic carcinogenicity was YES, and, second, an in vitro mutagenicity -Ames test alerts by ISS was applied to flag compounds that have the potential for in vitro genotoxicity based on whether the result for Structural Alert for S. typhimurium mutagenicity was YES."
               #)
             ),
-            column(
-              4,
-              checkboxGroupInput(
-                'Kroes',
-                'Select Kroes Decision',
-                choices = NULL
-                ,width = '100%'
-              )
-            ),
+            # column(
+            #   4,
+            #   checkboxGroupInput(
+            #     'Kroes',
+            #     'Select Kroes Decision',
+            #     choices = NULL
+            #     ,width = '100%'
+            #   )
+            # ),
             column(
               2,
               checkboxGroupInput(
@@ -160,8 +159,8 @@ shinyUI(
             )
           )
         )
-      ),
-      tabPanel(title = "Quit",icon = icon("power-off"))#,
+      )#,
+      #tabPanel(title = "Quit",icon = icon("power-off"))#,
       # rintrojs::introjsUI()
     )
   )

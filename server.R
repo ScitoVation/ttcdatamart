@@ -74,7 +74,7 @@ shinyServer(function(input, output,session) {
         
         ttcData <- levels(originalData$TTC_Class)
         
-        kroesData <- levels(originalData$Kroes_Decision)
+        #kroesData <- levels(originalData$Kroes_Decision)
         
         originalData <- renameColumns(originalData)
         setProgress(1)
@@ -257,26 +257,26 @@ shinyServer(function(input, output,session) {
   })
   
   # Updates filtered rows based on Kroes Decision' input
-  observeEvent(
-    input$Kroes,
-    {
-      Kroes <- input$Kroes
-      colSearch <- input$test_data_search_columns
-      if(is.null(Kroes))
-        Kroes = ''
-      kroes2 <- lapply(Kroes, function(each){paste0('"',each,'"')})
-      kroes3 <- paste(unlist(kroes2), collapse = ',')
-      kroes4 <- paste('[',kroes3,']')
-      colSearch[10] = kroes4
-      proxy %>%
-        updateSearch(
-          keywords = list(
-            columns = colSearch
-          )
-        )
-    },
-    ignoreNULL = F
-  )
+  # observeEvent(
+  #   input$Kroes,
+  #   {
+  #     Kroes <- input$Kroes
+  #     colSearch <- input$test_data_search_columns
+  #     if(is.null(Kroes))
+  #       Kroes = ''
+  #     kroes2 <- lapply(Kroes, function(each){paste0('"',each,'"')})
+  #     kroes3 <- paste(unlist(kroes2), collapse = ',')
+  #     kroes4 <- paste('[',kroes3,']')
+  #     colSearch[10] = kroes4
+  #     proxy %>%
+  #       updateSearch(
+  #         keywords = list(
+  #           columns = colSearch
+  #         )
+  #       )
+  #   },
+  #   ignoreNULL = F
+  # )
   
   observeEvent(input$navbar,{
     if (input$navbar == "Quit"){
@@ -290,12 +290,12 @@ shinyServer(function(input, output,session) {
     choices = ttcData,
     selected = ttcData[c(1,2,3,4,5,6)]
   )
-  updateCheckboxGroupInput(
-    session,
-    "Kroes",
-    choices = kroesData,
-    selected = kroesData[c(1,2,3)]
-  )
+  # updateCheckboxGroupInput(
+  #   session,
+  #   "Kroes",
+  #   choices = kroesData,
+  #   selected = kroesData[c(1,2,3)]
+  # )
   updatePickerInput(
     session,
     "col_types",
