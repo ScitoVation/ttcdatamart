@@ -27,6 +27,7 @@ getOriginalData <- function(df){
       ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
       ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
       ToxTree_TTC = formatC(as.numeric(ToxTree_TTC), format = 'e', digits = 2),
+      CASRN = as.factor(CASRN),
       Small_HTTK = as.factor(Small_HTTK),
       Large_CERAPP = as.factor(Large_CERAPP),
       Kroes_Decision = as.factor(Kroes_Decision),
@@ -90,6 +91,7 @@ shinyServer(function(input, output,session) {
       extensions = c('FixedColumns','FixedHeader'),
       rownames = F,
       options = list(
+        stateSave = TRUE,
         fixedHeader = T,
         deferRender = T,
         autoWidth = T,
@@ -145,14 +147,22 @@ shinyServer(function(input, output,session) {
     # conn2 <- do.call(dbConnect,list(SQLite(),"TestingCerapp.sqlite"))
     # on.exit(DBI::dbDisconnect(conn2))
     
-  })
+  },server = T)
   
   proxy = dataTableProxy('test_data')
   
+  filteredCols <- reactive({
+    tmpdata <- unlist(lapply(input[["test_data_state"]]$columns,function(x){
+      print(x$'visible')}))
+    #vector <- c(1:length(tempdata))
+    return(tmpdata)
+  })
+  
   output$download_table <- downloadHandler(
+    
     filename = "TTCdata.csv",
     function(file){
-      write.table(write_data,file = file, sep = ",",row.names = F)
+      write.table(originalData[input[["test_data_rows_all"]],filteredCols()],file = file, sep = ",",row.names = F)
     }
   )
   
@@ -217,6 +227,34 @@ shinyServer(function(input, output,session) {
     },
     ignoreNULL = F
   )
+  
+  observeEvent(input$upload_chems,{
+    path <- input$upload_chems$datapath
+    if (is.null(path)){
+      chem_list <- NULL
+      output$chem_status <- renderText({"No file uploaded"
+      })
+    }else{
+      chem_list <- read.csv(path,header = T,stringsAsFactors = F)[[1]]
+      output$chem_status <- renderPrint({
+        paste0("Uploaded list has ",
+               as.character(length(chem_list)),
+               " chemicals.")
+        })
+      search_string <-paste('[', paste(unlist(
+        lapply(chem_list,function(x){paste0('"',x,'"')})
+      ),collapse = ','),']')
+      colSearch <- input$test_data_search_columns
+      colSearch[1]= search_string
+      #print(colSearch)
+      proxy %>%
+        updateSearch(
+          keywords = list(
+            columns = colSearch
+          )
+        )
+    }
+  })
   
   # Updates filtered rows based on Kroes Decision' input
   observeEvent(

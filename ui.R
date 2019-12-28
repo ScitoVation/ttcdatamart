@@ -11,16 +11,18 @@ shinyUI(
     tags$head(
       tags$link(
         rel='icon',
-        href="https://www.scitovation.com/wp-content/uploads/2019/02/cropped-ScitoVation_icon-32x32.png",
+        href='cropped-ScitoVation_icon-32x32.png',#href="https://www.scitovation.com/wp-content/uploads/2019/02/cropped-ScitoVation_icon-32x32.png",
         sizes="32x32"
       )
     ),
     useShinyjs(),
     tags$head(tags$style(".shiny-notification {position: fixed; top: 30% ;left: 35%")),
+    tags$head(tags$style("#navbar {height:75px;}")),
     navbarPage(
+
       title = tags$img(
-        height = 25,
-        src = "https://www.scitovation.com/wp-content/themes/scitovation/assets/images/logo/ScitoVation-Pioneers_in_Chemical_Safety_Assessment.svg"
+        height = 50,
+        src = 'sciv_logo_transparent.png'#src = "https://www.scitovation.com/wp-content/themes/scitovation/assets/images/logo/ScitoVation-Pioneers_in_Chemical_Safety_Assessment.svg"
       ),
       id = 'navbar',
       #position = 'fixed-top',
@@ -35,7 +37,7 @@ shinyUI(
           #fluidRow(actionButton("help","Help",icon = icon("question-circle"))),
           fluidRow(
             column(
-              4,
+              3,
               #introBox(
               pickerInput(
                 'ttc_class',
@@ -65,13 +67,26 @@ shinyUI(
               )
             ),
             column(
-              4,
+              2,
               checkboxGroupInput(
                 'dataset',
                 'Filter Dataset',
                 choices = c('HTTK', 'CERAPP')
                 ,width = '100%'
               )
+            ),
+            column(
+              3,
+              fluidRow(
+                fileInput("upload_chems",
+                          label = "Upload list of chemicals to filter",
+                          multiple = F,placeholder = "List of CAS numbers")
+              ),
+              fluidRow(
+                textOutput("chem_status",inline = T)
+              )
+              
+              
             )
           ),
           fluidRow(
