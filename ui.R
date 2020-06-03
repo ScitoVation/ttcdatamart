@@ -11,7 +11,7 @@ shinyUI(
     tags$head(
       tags$link(
         rel='icon',
-        href='cropped-ScitoVation_icon-32x32.png',#href="https://www.scitovation.com/wp-content/uploads/2019/02/cropped-ScitoVation_icon-32x32.png",
+        href='cropped-ScitoVation_icon-32x32.png',
         sizes="32x32"
       )
     ),
@@ -20,8 +20,8 @@ shinyUI(
     tags$head(tags$style("#navbar {height:75px;}")),
     navbarPage(
       title = tags$img(
-        height = 50,
-        src = 'sciv_logo_transparent.png'#src = "https://www.scitovation.com/wp-content/themes/scitovation/assets/images/logo/ScitoVation-Pioneers_in_Chemical_Safety_Assessment.svg"
+        height = 30,
+        src = 'sciv_logo_transparent.png',
       ),
       id = 'navbar',
       #position = 'fixed-top',
@@ -32,7 +32,7 @@ shinyUI(
       tabPanel(
         title = 'Datatable',
         icon = icon('table'),
-        fluidPage(
+        fluidPage(theme = "bootstrap.min.css",
           #fluidRow(actionButton("help","Help",icon = icon("question-circle"))),
           fluidRow(
             column(
@@ -84,14 +84,14 @@ shinyUI(
               fluidRow(
                 textOutput("chem_status",inline = T)
               )
-              
-              
+
+
             )
           ),
           fluidRow(
             tags$style('.datatables .display {margin-left: 0;}'), #Sets datatables' columns to 'float left'
             # style = 'float:left', # uncomment to make search bar move with table's size
-            
+
             #hides 2nd row of table's header which should be 'filter' if enabled.
             tags$style('.datatables tr:nth-child(2) {display:none;}'),
             column(
@@ -141,17 +141,17 @@ shinyUI(
               p(
                 HTML(
                   paste0(
-                    'We have calculated Thresholds of Toxicological Concern (TTC) for a 
+                    'We have calculated Thresholds of Toxicological Concern (TTC) for a
                   45,000-chemical universe defined previously ',
                     a(
                       href = 'https://ehp.niehs.nih.gov/doi/full/10.1289/ehp.1510267?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%3dpubmed',
                       'Mansouri et al 2016',
                       target = '_blank'
                     ),
-                    '. We used Toxtree v2.6.13 to determine the TTC class and the Kroes Decision 
-                  for each compound. Sort and filter the table to interact with the data, 
-                  or search for a compound of interest by entering its name into the search 
-                  bar. This work was funded by the American Chemistry Council - Long-range 
+                    '. We used Toxtree v2.6.13 to determine the TTC class and the Kroes Decision
+                  for each compound. Sort and filter the table to interact with the data,
+                  or search for a compound of interest by entering its name into the search
+                  bar. This work was funded by the American Chemistry Council - Long-range
                   Research Initiative (ACC-LRI).'
                   )
                 )
@@ -165,5 +165,3 @@ shinyUI(
     )
   )
 )
-
-
