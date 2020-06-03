@@ -1,9 +1,9 @@
 #
-# This is the server logic of a Shiny web application. You can run the 
+# This is the server logic of a Shiny web application. You can run the
 # application by clicking 'Run App' above.
 #
 # Find out more about building applications with Shiny here:
-# 
+#
 #    http://shiny.rstudio.com/
 #
 
@@ -23,9 +23,9 @@ getOriginalData <- function(df){
     select(-ExpoCast_Exposure_95th,-ExpoCast_Exposure_Median,-NOAEL_MoE,-OED_MoE,-TTC_MoE)
   originalData <- originalData %>%
     mutate(
-      IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
-      ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
-      ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
+      IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),
+      ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),
+      ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),
       ToxTree_TTC = formatC(as.numeric(ToxTree_TTC), format = 'e', digits = 2),
       CASRN = as.factor(CASRN),
       Small_HTTK = as.factor(Small_HTTK),
@@ -34,7 +34,7 @@ getOriginalData <- function(df){
       TTC_Class = ifelse(Kroes_Decision == 'Risk assessment requires compound-specific toxicity data','TTC not applicable',TTC_Class),
       ToxTree_TTC = ifelse(Kroes_Decision == 'Risk assessment requires compound-specific toxicity data','TTC not applicable',ToxTree_TTC),
       TTC_Class = as.factor(gsub('Genotoxic', 'Genotoxicity Alert',TTC_Class))
-      
+
     )
   return(originalData)
 }
@@ -60,22 +60,22 @@ renameColumns <- function(df){
 # Define server logic required to draw a histogram
 shinyServer(function(input, output,session) {
   # initialize all ui element options
-  conn <- dbConnect(SQLite(),"TestingCerapp.sqlite")
+  conn <- dbConnect(SQLite(),"cerapp_ttc.sqlite")
   withProgress(
-    message = 'Retrieving data', 
+    message = 'Retrieving TTC data',
     value = 0,
     expr = {
       tryCatch({
         trulyOriginalData <- dbGetQuery(conn,"SELECT * FROM Triage")
         dbDisconnect(conn)
         originalData <- getOriginalData(trulyOriginalData)
-        
+
         write_data <- data.frame(originalData)
-        
+
         ttcData <- levels(originalData$TTC_Class)
-        
+
         #kroesData <- levels(originalData$Kroes_Decision)
-        
+
         originalData <- renameColumns(originalData)
         setProgress(1)
       },
@@ -83,10 +83,10 @@ shinyServer(function(input, output,session) {
         shinyalert("Failed to retrieve the data.", conditionMessage(e), type = "error", closeOnClickOutside = TRUE)
       })
     })
-  
+
   output$test_data <- DT::renderDataTable({
     DT::datatable(
-      data = originalData,#renameColumns(getOriginalData(dbGetQuery(conn2,"SELECT * FROM Triage"))),
+      data = originalData,
       filter='top',
       extensions = c('FixedColumns','FixedHeader'),
       rownames = F,
@@ -143,29 +143,29 @@ shinyServer(function(input, output,session) {
         )
       )
     )
-    
+
     # conn2 <- do.call(dbConnect,list(SQLite(),"TestingCerapp.sqlite"))
     # on.exit(DBI::dbDisconnect(conn2))
-    
+
   },server = T)
-  
+
   proxy = dataTableProxy('test_data')
-  
+
   filteredCols <- reactive({
     tmpdata <- unlist(lapply(input[["test_data_state"]]$columns,function(x){
       print(x$'visible')}))
     #vector <- c(1:length(tempdata))
     return(tmpdata)
   })
-  
+
   output$download_table <- downloadHandler(
-    
+
     filename = "TTCdata.csv",
     function(file){
       write.table(originalData[input[["test_data_rows_all"]],filteredCols()],file = file, sep = ",",row.names = F)
     }
   )
-  
+
   # Updates visible columns
   observeEvent(
     input$col_types,
@@ -178,7 +178,7 @@ shinyServer(function(input, output,session) {
     },
     ignoreNULL = F
   )
-  
+
   # Updates filtered rows based on Dataset's input
   observeEvent(
     input$dataset,
@@ -192,7 +192,7 @@ shinyServer(function(input, output,session) {
         CERAPPVal <- '["YES"]'
       } else
         CERAPPVal <- ''
-      
+
       colSearch <- input$test_data_search_columns
       colSearch[11] = HTTKVal
       colSearch[12] = CERAPPVal
@@ -205,7 +205,7 @@ shinyServer(function(input, output,session) {
     },
     ignoreNULL = F
   )
-  
+
   # Updates filtered rows based on TTC Class' input
   observeEvent(
     input$ttc_class,
@@ -227,7 +227,7 @@ shinyServer(function(input, output,session) {
     },
     ignoreNULL = F
   )
-  
+
   observeEvent(input$upload_chems,{
     path <- input$upload_chems$datapath
     if (is.null(path)){
@@ -255,7 +255,7 @@ shinyServer(function(input, output,session) {
         )
     }
   })
-  
+
   # Updates filtered rows based on Kroes Decision' input
   # observeEvent(
   #   input$Kroes,
@@ -277,13 +277,13 @@ shinyServer(function(input, output,session) {
   #   },
   #   ignoreNULL = F
   # )
-  
+
   observeEvent(input$navbar,{
     if (input$navbar == "Quit"){
       stopApp()
     }
   })
-  
+
   updatePickerInput(
     session,
     "ttc_class",
@@ -302,7 +302,7 @@ shinyServer(function(input, output,session) {
     choices = colnames(originalData),
     selected = colnames(originalData)[c(1:4,8,9,10)]
   )
-  
+
   delay(
     3000,{
       colSearch <- input$test_data_search_columns
