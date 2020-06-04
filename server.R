@@ -23,9 +23,9 @@ getOriginalData <- function(df){
     select(-ExpoCast_Exposure_95th,-ExpoCast_Exposure_Median,-NOAEL_MoE,-OED_MoE,-TTC_MoE)
   originalData <- originalData %>%
     mutate(
-      IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),
-      ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),
-      ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),
+      IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
+      ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
+      ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
       ToxTree_TTC = formatC(as.numeric(ToxTree_TTC), format = 'e', digits = 2),
       CASRN = as.factor(CASRN),
       Small_HTTK = as.factor(Small_HTTK),
@@ -62,7 +62,7 @@ shinyServer(function(input, output,session) {
   # initialize all ui element options
   conn <- dbConnect(SQLite(),"cerapp_ttc.sqlite")
   withProgress(
-    message = 'Retrieving TTC data',
+    message = 'Retrieving data',
     value = 0,
     expr = {
       tryCatch({
@@ -86,7 +86,7 @@ shinyServer(function(input, output,session) {
 
   output$test_data <- DT::renderDataTable({
     DT::datatable(
-      data = originalData,
+      data = originalData,#renameColumns(getOriginalData(dbGetQuery(conn2,"SELECT * FROM Triage"))),
       filter='top',
       extensions = c('FixedColumns','FixedHeader'),
       rownames = F,
@@ -109,6 +109,7 @@ shinyServer(function(input, output,session) {
               "'<span title=\"' + data + '\">' + data.substr(0, 40) + '...</span>' : data;",
               "}"
             ),
+            width = '300px',
             targets = c(2)
           ),
           list(
@@ -118,11 +119,11 @@ shinyServer(function(input, output,session) {
               "'<span title=\"' + data + '\">' + data.substr(0, 45) + '...</span>' : data;",
               "}"
             ),
-            targets = c(0,1,3,9)
+            targets = c(0,3,9)
           ),
           list(
             width = '150px',
-            targets = c(1, 4:8,10,11)
+            targets = c(4:8,10,11)
           )
           ,list( #sets the width for SMILES and Kroes Decision columns
             width = '420px',
@@ -132,13 +133,17 @@ shinyServer(function(input, output,session) {
             width = '350px',
             targets = c(9)
           )
-          ,list( #sets the width for Name column
-            width = '300px',
-            targets = c(2)
-          )
           ,list( #sets the width for CASRN column
             width = '120px',
             targets = c(0)
+          )
+          ,list(
+            render = JS(
+              "function(data, type, row, meta) {",
+              "return '<a href=\"https://comptox.epa.gov/dashboard/' + data + '\">' + data + '</a>';",
+              "}"),
+            width = '150px',
+            targets = c(1)
           )
         )
       )
