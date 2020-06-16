@@ -20,8 +20,8 @@ shinyUI(
     tags$head(tags$style("#navbar {height:75px;}")),
     navbarPage(
       title = tags$img(
-        height = 30,
-        src = 'sciv_logo_transparent.png',
+        height = 40,
+        src = 'sciv_logo_transparent.png'
       ),
       id = 'navbar',
       #position = 'fixed-top',
@@ -44,7 +44,6 @@ shinyUI(
                 choices = NULL,
                 multiple = TRUE,
                 options = list(
-                  'live-search' = TRUE,
                   'actions-box' = TRUE,
                   'selected-text-format' = 'count > 2',
                   'count-selected-text'='{0} classes selected',

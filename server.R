@@ -48,7 +48,7 @@ renameColumns <- function(df){
     'NOAEL (IRIS)',
     'Toxcast Equivalent Dose (5th percentile)',
     'Toxcast Equivalent Dose (Median)',
-    'TTC Value',
+    'TTC Value (mg/kg/d)',
     'TTC Class',
     'Kroes Decision',
     'HTTK chemical',
@@ -57,26 +57,26 @@ renameColumns <- function(df){
   return(df)
 }
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output,session) {
   # initialize all ui element options
-  conn <- dbConnect(SQLite(),"cerapp_ttc.sqlite")
+  conn <- dbConnect(SQLite(),"cerapp_ttc_june_2020.sqlite")
   withProgress(
     message = 'Retrieving data',
     value = 0,
     expr = {
       tryCatch({
-        trulyOriginalData <- dbGetQuery(conn,"SELECT * FROM Triage")
+        trulyOriginalData <- dbGetQuery(conn,"SELECT * FROM ttc")
         dbDisconnect(conn)
-        originalData <- getOriginalData(trulyOriginalData)
+        #originalData <- getOriginalData(trulyOriginalData)
+        originalData <- (trulyOriginalData)
 
         write_data <- data.frame(originalData)
 
-        ttcData <- levels(originalData$TTC_Class)
+        ttcData <- levels(originalData$"TTC Classification (Raw SMILES)")
 
         #kroesData <- levels(originalData$Kroes_Decision)
 
-        originalData <- renameColumns(originalData)
+        #originalData <- renameColumns(originalData)
         setProgress(1)
       },
       error = function(e) {
@@ -86,7 +86,7 @@ shinyServer(function(input, output,session) {
 
   output$test_data <- DT::renderDataTable({
     DT::datatable(
-      data = originalData,#renameColumns(getOriginalData(dbGetQuery(conn2,"SELECT * FROM Triage"))),
+      data = originalData,
       filter='top',
       extensions = c('FixedColumns','FixedHeader'),
       rownames = F,
@@ -305,7 +305,7 @@ shinyServer(function(input, output,session) {
     session,
     "col_types",
     choices = colnames(originalData),
-    selected = colnames(originalData)[c(1:4,8,9,10)]
+    selected = colnames(originalData)[c(1:4,9,14,15)]
   )
 
   delay(
