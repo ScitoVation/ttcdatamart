@@ -18,23 +18,21 @@ library(DBI)
 library(shinyalert)
 
 getOriginalData <- function(df){
-  originalData <- df %>%
-    # removes ExpoCast and MoE columns
-    select(-ExpoCast_Exposure_95th,-ExpoCast_Exposure_Median,-NOAEL_MoE,-OED_MoE,-TTC_MoE)
+    originalData <- df 
   originalData <- originalData %>%
     mutate(
-      IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
-      ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
-      ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
-      ToxTree_TTC = formatC(as.numeric(ToxTree_TTC), format = 'e', digits = 2),
-      CASRN = as.factor(CASRN),
-      Small_HTTK = as.factor(Small_HTTK),
-      Large_CERAPP = as.factor(Large_CERAPP),
-      Kroes_Decision = as.factor(Kroes_Decision),
-      TTC_Class = ifelse(Kroes_Decision == 'Risk assessment requires compound-specific toxicity data','TTC not applicable',TTC_Class),
-      ToxTree_TTC = ifelse(Kroes_Decision == 'Risk assessment requires compound-specific toxicity data','TTC not applicable',ToxTree_TTC),
-      TTC_Class = as.factor(gsub('Genotoxic', 'Genotoxicity Alert',TTC_Class))
-
+      "TTC Classification (Raw Smiles)" = as.factor("TTC Classification (Raw Smiles)"),
+      #IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
+      #ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
+      #ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
+      #ToxTree_TTC = formatC(as.numeric(ToxTree_TTC), format = 'e', digits = 2),
+      #CASRN = as.factor(CASRN),
+      #Small_HTTK = as.factor(Small_HTTK),
+      #Large_CERAPP = as.factor(Large_CERAPP),
+      #Kroes_Decision = as.factor(Kroes_Decision),
+      #TTC_Class = ifelse(Kroes_Decision == 'Risk assessment requires compound-specific toxicity data','TTC not applicable',TTC_Class),
+      #ToxTree_TTC = ifelse(Kroes_Decision == 'Risk assessment requires compound-specific toxicity data','TTC not applicable',ToxTree_TTC),
+      #TTC_Class = as.factor(gsub('Genotoxic', 'Genotoxicity Alert',TTC_Class))
     )
   return(originalData)
 }
@@ -64,24 +62,24 @@ shinyServer(function(input, output,session) {
     message = 'Retrieving data',
     value = 0,
     expr = {
-      tryCatch({
+       tryCatch({
         trulyOriginalData <- dbGetQuery(conn,"SELECT * FROM ttc")
         dbDisconnect(conn)
-        #originalData <- getOriginalData(trulyOriginalData)
-        originalData <- (trulyOriginalData)
+        originalData <- getOriginalData(trulyOriginalData)
 
         write_data <- data.frame(originalData)
 
+        #FIXME something broken here. This array populates the "Select TTC Class"
         ttcData <- levels(originalData$"TTC Classification (Raw SMILES)")
 
-        #kroesData <- levels(originalData$Kroes_Decision)
+        kroesData <- levels(originalData$Kroes_Decision)
 
         #originalData <- renameColumns(originalData)
         setProgress(1)
-      },
-      error = function(e) {
-        shinyalert("Failed to retrieve the data.", conditionMessage(e), type = "error", closeOnClickOutside = TRUE)
-      })
+       },
+       error = function(e) {
+         shinyalert("Failed to retrieve the data.", conditionMessage(e), type = "error", closeOnClickOutside = TRUE)
+       })
     })
 
   output$test_data <- DT::renderDataTable({
@@ -103,41 +101,24 @@ shinyServer(function(input, output,session) {
         #ajax = list(url = dataTableAjax(session, originalData, rownames = F, outputId = 'test_data')),
         columnDefs = list(
           list(
-            render = JS(
-              "function(data, type, row, meta) {",
-              "return type === 'display' && data.length > 40 ?",
-              "'<span title=\"' + data + '\">' + data.substr(0, 40) + '...</span>' : data;",
-              "}"
-            ),
-            width = '300px',
-            targets = c(2)
-          ),
-          list(
+            # elipses points for long fields
             render = JS(
               "function(data, type, row, meta) {",
               "return type === 'display' && data.length > 45 ?",
               "'<span title=\"' + data + '\">' + data.substr(0, 45) + '...</span>' : data;",
               "}"
             ),
-            targets = c(0,3,9)
+            targets = c(2,3,4,5)
           ),
           list(
-            width = '150px',
-            targets = c(4:8,10,11)
-          )
-          ,list( #sets the width for SMILES and Kroes Decision columns
-            width = '420px',
-            targets = c(3)
-          )
-          ,list( #sets the width for Kroes Decision column
-            width = '350px',
-            targets = c(9)
-          )
-          ,list( #sets the width for CASRN column
-            width = '120px',
-            targets = c(0)
-          )
-          ,list(
+            width = '300px',
+            targets = c(2)
+          ),
+          list(
+            width = '100px',
+            targets = c(3,4)
+          ),
+          list(
             render = JS(
               "function(data, type, row, meta) {",
               "return '<a href=\"https://comptox.epa.gov/dashboard/' + data + '\">' + data + '</a>';",
