@@ -18,10 +18,10 @@ library(DBI)
 library(shinyalert)
 
 getOriginalData <- function(df){
-    originalData <- df 
+    originalData <- df
   originalData <- originalData %>%
     mutate(
-      "TTC Classification (Raw Smiles)" = as.factor("TTC Classification (Raw Smiles)"),
+      "TTC Classification (Raw SMILES)" = as.factor("TTC Classification (Raw Smiles)"),
       #IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
       #ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
       #ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
@@ -74,6 +74,7 @@ shinyServer(function(input, output,session) {
 
         kroesData <- levels(originalData$Kroes_Decision)
 
+        #dont need to do this anymore because i renamed the columns to how they will be presented in the interface (pdm)
         #originalData <- renameColumns(originalData)
         setProgress(1)
        },
