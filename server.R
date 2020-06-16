@@ -21,7 +21,7 @@ getOriginalData <- function(df){
     originalData <- df
   originalData <- originalData %>%
     mutate(
-      `TTC Classification (Raw SMILES)` = as.factor(`TTC Classification (Raw Smiles)`),
+      `TTC Classification (Raw SMILES)` = as.factor("TTC Classification (Raw SMILES)"),
       #IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
       #ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
       #ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
