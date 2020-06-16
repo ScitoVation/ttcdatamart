@@ -21,7 +21,7 @@ getOriginalData <- function(df){
     originalData <- df
   originalData <- originalData %>%
     mutate(
-      "TTC Classification (Raw SMILES)" = as.factor("TTC Classification (Raw Smiles)"),
+      `TTC Classification (Raw SMILES)` = as.factor(`TTC Classification (Raw Smiles)`),
       #IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
       #ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
       #ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
@@ -39,18 +39,31 @@ getOriginalData <- function(df){
 
 renameColumns <- function(df){
   colnames(df) = c(
-    'CASRN',
-    'DSSTox Substance ID',
-    'Name',
-    'SMILES',
-    'NOAEL (IRIS)',
-    'Toxcast Equivalent Dose (5th percentile)',
-    'Toxcast Equivalent Dose (Median)',
-    'TTC Value (mg/kg/d)',
-    'TTC Class',
-    'Kroes Decision',
-    'HTTK chemical',
-    'CERAPP chemical'
+"CASRN",
+"DSSTox Substance ID",
+"Name",
+"SMILES (raw)",
+"SMILES (QSAR-ready)",
+"Kroes Question 1 (Raw SMILES)",
+"Kroes Decision (Raw SMILES)",
+"Cramer Tree (Raw SMILES)",
+"Cramer Decision (Raw SMILES)",
+"Structural alert: genotoxic carcinogenicity (Raw SMILES)",
+"Structural alert: S typhimurium mutagenicity (Raw SMILES)",
+"Structural alert: AChE inhibition FG52_2 (Raw SMILES)",
+"Structural alert: AChE inhibition FG81_2 (Raw SMILES)",
+"TTC Value (mg/kg/d, Raw SMILES)",
+"TTC Classification (Raw SMILES)",
+"Kroes Question 1 (QSAR-ready SMILES)",
+"Kroes Decision (QSAR-Ready SMILES)",
+"Cramer Tree (QSAR-Ready SMILES)",
+"Cramer Decision (QSAR-Ready SMILES)",
+"Structural alert: genotoxic carcinogenicity (QSAR-Ready SMILES)",
+"Structural alert: S typhimurium mutagenicity (QSAR-Ready SMILES)",
+"Structural alert: AChE inhibition FG52_2 (QSAR-Ready SMILES)",
+"Structural alert: AChE inhibition FG81_2 (QSAR-Ready SMILES)",
+"TTC Classification (QSAR-Ready SMILES)",
+"TTC Value (mg/kg/d, QSAR-Ready SMILES)"
   )
   return(df)
 }
