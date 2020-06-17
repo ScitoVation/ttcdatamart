@@ -21,7 +21,7 @@ getOriginalData <- function(df){
     originalData <- df
   originalData <- originalData %>%
     mutate(
-      `TTC Classification (Raw SMILES)` = as.factor("TTC Classification (Raw SMILES)"),
+      TTC_Value_raw = as.factor(TTC_Value_raw)
       #IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
       #ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
       #ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
@@ -82,8 +82,7 @@ shinyServer(function(input, output,session) {
 
         write_data <- data.frame(originalData)
 
-        #FIXME something broken here. This array populates the "Select TTC Class"
-        ttcData <- levels(originalData$"TTC Classification (Raw SMILES)")
+        ttcData <- levels(originalData$TTC_Value_raw)
 
         kroesData <- levels(originalData$Kroes_Decision)
 
@@ -217,7 +216,7 @@ shinyServer(function(input, output,session) {
       ttcClass2 <- lapply(ttcClass, function(each){paste0('"',each,'"')})
       ttcClass3 <- paste(unlist(ttcClass2), collapse = ',')
       ttcClass4 <- paste('[',ttcClass3,']')
-      colSearch[9] = ttcClass4
+      colSearch[15] = ttcClass4
       proxy %>%
         updateSearch(
           keywords = list(
