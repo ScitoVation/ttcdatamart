@@ -124,19 +124,14 @@ shinyServer(function(input, output,session) {
             targets = c(2,3,4,5)
           ),
           list(
-            width = '300px',
-            targets = c(2)
-          ),
-          list(
             width = '100px',
-            targets = c(3,4)
+            targets = c(0)
           ),
           list(
             render = JS(
               "function(data, type, row, meta) {",
               "return '<a href=\"https://comptox.epa.gov/dashboard/' + data + '\">' + data + '</a>';",
               "}"),
-            width = '150px',
             targets = c(1)
           )
         )
