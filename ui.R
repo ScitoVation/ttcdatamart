@@ -40,7 +40,7 @@ shinyUI(
               #introBox(
               pickerInput(
                 'ttc_class',
-                'Select TTC Class',
+                'Select TTC Class (Raw SMILES)',
                 choices = NULL,
                 multiple = TRUE,
                 options = list(
@@ -92,7 +92,7 @@ shinyUI(
             # style = 'float:left', # uncomment to make search bar move with table's size
 
             #hides 2nd row of table's header which should be 'filter' if enabled.
-            tags$style('.datatables tr:nth-child(2) {display:none;}'),
+            tags$style('thead tr:nth-child(2) {display:none;}'),
             column(
               width = 12,
               pickerInput(
@@ -147,7 +147,7 @@ shinyUI(
                       'Mansouri et al 2016',
                       target = '_blank'
                     ),
-                    '. We used Toxtree v2.6.13 to determine the TTC class and the Kroes Decision
+                    '. We used Toxtree v3.1.0 to determine the TTC class and the Kroes Decision
                   for each compound. Sort and filter the table to interact with the data,
                   or search for a compound of interest by entering its name into the search
                   bar. This work was funded by the American Chemistry Council - Long-range
