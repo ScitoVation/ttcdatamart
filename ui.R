@@ -32,7 +32,7 @@ shinyUI(
       tabPanel(
         title = 'Datatable',
         icon = icon('table'),
-        fluidPage(theme = "bootstrap.min",
+        fluidPage(theme = "bootstrap.css",
           #fluidRow(actionButton("help","Help",icon = icon("question-circle"))),
           fluidRow(
             column(
