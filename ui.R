@@ -64,15 +64,15 @@ shinyUI(
             #     ,width = '100%'
             #   )
             # ),
-            column(
-              2,
-              checkboxGroupInput(
-                'dataset',
-                'Filter Dataset',
-                choices = c('HTTK', 'CERAPP')
-                ,width = '100%'
-              )
-            ),
+            # column(
+            #   2,
+            #   checkboxGroupInput(
+            #     'dataset',
+            #     'Filter Dataset',
+            #     choices = c('HTTK', 'CERAPP')
+            #     ,width = '100%'
+            #   )
+            # ),
             column(
               3,
               fluidRow(

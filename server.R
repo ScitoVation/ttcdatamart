@@ -86,8 +86,7 @@ shinyServer(function(input, output,session) {
 
         kroesData <- levels(originalData$Kroes_Decision)
 
-        #dont need to do this anymore because i renamed the columns to how they will be presented in the interface (pdm)
-        #originalData <- renameColumns(originalData)
+        originalData <- renameColumns(originalData)
         setProgress(1)
        },
        error = function(e) {
@@ -245,7 +244,6 @@ shinyServer(function(input, output,session) {
       ),collapse = ','),']')
       colSearch <- input$test_data_search_columns
       colSearch[1]= search_string
-      #print(colSearch)
       proxy %>%
         updateSearch(
           keywords = list(
