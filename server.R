@@ -21,12 +21,13 @@ getOriginalData <- function(df){
     originalData <- df
   originalData <- originalData %>%
     mutate(
-      TTC_Value_raw = as.factor(TTC_Value_raw)
+      TTC_Value_raw = as.factor(TTC_Value_raw),
       #IRIS_NOAEL = suppressWarnings(as.numeric(IRIS_NOAEL)),# Warning: NAs introduced by coercion
       #ToxCast_OED_5th = suppressWarnings(as.numeric(ToxCast_OED_5th)),# Warning: NAs introduced by coercion
       #ToxCast_OED_Median = suppressWarnings(as.numeric(ToxCast_OED_Median)),# Warning: NAs introduced by coercion
-      #ToxTree_TTC = formatC(as.numeric(ToxTree_TTC), format = 'e', digits = 2),
-      #CASRN = as.factor(CASRN),
+      TTC_Classification_raw = formatC(as.numeric(TTC_Classification_raw), format = 'e', digits = 2),
+      TTC_Classification_QSAR_Ready = formatC(as.numeric(TTC_Classification_QSAR_Ready), format = 'e', digits = 2),
+      CASRN = as.factor(CASRN),
       #Small_HTTK = as.factor(Small_HTTK),
       #Large_CERAPP = as.factor(Large_CERAPP),
       #Kroes_Decision = as.factor(Kroes_Decision),
@@ -226,6 +227,9 @@ shinyServer(function(input, output,session) {
     ignoreNULL = F
   )
 
+  ###############
+  # UPLOAD CHEMICAL LIST
+  ###############
   observeEvent(input$upload_chems,{
     path <- input$upload_chems$datapath
     if (is.null(path)){
@@ -253,27 +257,6 @@ shinyServer(function(input, output,session) {
     }
   })
 
-  # Updates filtered rows based on Kroes Decision' input
-  # observeEvent(
-  #   input$Kroes,
-  #   {
-  #     Kroes <- input$Kroes
-  #     colSearch <- input$test_data_search_columns
-  #     if(is.null(Kroes))
-  #       Kroes = ''
-  #     kroes2 <- lapply(Kroes, function(each){paste0('"',each,'"')})
-  #     kroes3 <- paste(unlist(kroes2), collapse = ',')
-  #     kroes4 <- paste('[',kroes3,']')
-  #     colSearch[10] = kroes4
-  #     proxy %>%
-  #       updateSearch(
-  #         keywords = list(
-  #           columns = colSearch
-  #         )
-  #       )
-  #   },
-  #   ignoreNULL = F
-  # )
 
   observeEvent(input$navbar,{
     if (input$navbar == "Quit"){
