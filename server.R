@@ -130,7 +130,8 @@ shinyServer(function(input, output,session) {
           list(
             render = JS(
               "function(data, type, row, meta) {",
-              "return '<a href=\"https://comptox.epa.gov/dashboard/' + data + '\">' + data + '</a>';",
+              "return '<a href=\"https://comptox.epa.gov/dashboard/' + data + ' \" target=\"_PARENT\">' + data + '</a>';",
+              #"return '<a href=\"https://comptox.epa.gov/dashboard/dsstoxdb/results?search=' + data + '\">' + data + '</a>';",
               "}"),
             targets = c(1)
           )
